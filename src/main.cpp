@@ -8,6 +8,7 @@
 using namespace std;
 
 extern FILE *yyin;
+extern FILE *yyout;
 extern int yyparse(unique_ptr<BaseAST> &ast);
 
 int main(int argc, const char *argv[]){
@@ -17,14 +18,17 @@ int main(int argc, const char *argv[]){
     auto output = argv[4];
 
     yyin = fopen(input, "r");
+    yyout = freopen(output,"w",stdout);
+
     assert(yyin);
 
     unique_ptr<BaseAST> ast;
     auto ret = yyparse(ast);
     assert(!ret);
-    cout<<"here"<<endl;
     // cout << *ast << endl;
-    ast -> Traverse();
+    // ast -> Traverse();
+    ast -> toIR();
+    fclose(stdout);
     return 0;
 
 }

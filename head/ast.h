@@ -23,6 +23,7 @@ class BaseAST{
 public:
     virtual ~BaseAST() = default;
     virtual void Traverse() const = 0;
+    virtual void toIR() const = 0;
 };
 
 class CompUnitAST : public BaseAST{
@@ -32,6 +33,9 @@ public:
         std::cout<<"CompUnitAST { ";
         func_def -> Traverse();
         std::cout<<" } ";
+    }
+    void toIR() const override{
+        func_def -> toIR();
     }
 };
 
@@ -47,6 +51,13 @@ public:
         block->Traverse();
         std::cout<<" } ";
     }
+
+    void toIR() const override{
+        std::cout<<"fun @"<<ident<<"(): ";
+        std::cout<<"i32 {"<<std::endl;
+        block -> toIR();
+        std::cout<<"}";
+    }
 };
 
 class FuncTypeAST : public BaseAST{
@@ -56,6 +67,10 @@ public:
         std::cout<<" FuncTypeAST { ";
         std::cout<<" "<<TypeString<<" ";
         std::cout<<" } ";
+    }
+
+    void toIR() const override{
+        return;
     }
 };
 
@@ -67,6 +82,11 @@ public:
         stmt->Traverse();
         std::cout<<"}";
     }
+
+    void toIR() const override{
+        std::cout<<"%entry:"<<std::endl;
+        stmt -> toIR();
+    }
 };
 
 class StmtAST : public BaseAST{
@@ -76,6 +96,10 @@ public:
         std::cout<<" StmtAST { ";
         std::cout<<number;
         std::cout<<" } ";
+    }
+
+    void toIR() const override{
+        std::cout<<"  ret 0"<<std::endl;
     }
 };
 
