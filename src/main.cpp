@@ -3,11 +3,12 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include "../head/ast.h"
 
 using namespace std;
 
 extern FILE *yyin;
-extern int yyparse(unique_ptr<string> &ast);
+extern int yyparse(unique_ptr<BaseAST> &ast);
 
 int main(int argc, const char *argv[]){
     assert(argc == 5);
@@ -18,11 +19,12 @@ int main(int argc, const char *argv[]){
     yyin = fopen(input, "r");
     assert(yyin);
 
-    unique_ptr<string> ast;
+    unique_ptr<BaseAST> ast;
     auto ret = yyparse(ast);
     assert(!ret);
-
-    cout<< *ast << endl;
+    cout<<"here"<<endl;
+    // cout << *ast << endl;
+    ast -> Traverse();
     return 0;
 
 }
