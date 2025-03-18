@@ -99,7 +99,7 @@ public:
     }
 
     void toIR() const override{
-        std::cout<<"  ret 0"<<std::endl;
+        std::cout<<"  ret "<<number<<std::endl;
     }
 };
 

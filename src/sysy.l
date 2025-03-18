@@ -14,6 +14,7 @@ using namespace std;
 
 WhiteSpace [ \t\n\r]*
 LineComment "//".*
+CloseComment "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
 
 Identifier [a-zA-Z_][a-zA-Z0-9_]*
 
@@ -25,6 +26,7 @@ Hexadecimal 0[xX][0-9a-fA-F]+
 
 {WhiteSpace}    {/*ignore*/}
 {LineComment}   {/*ignore*/}
+{CloseComment}  {/*ignore*/}
 
 "int"   {return INT;}
 "return" {return RETURN;}
