@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include "../head/ast.h"
+#include "koopa.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ int main(int argc, const char *argv[]){
     auto output = argv[4];
 
     yyin = fopen(input, "r");
-    yyout = freopen(output,"w",stdout);
+    //yyout = freopen(output,"w",stdout);
 
     assert(yyin);
 
@@ -27,8 +28,15 @@ int main(int argc, const char *argv[]){
     assert(!ret);
     // cout << *ast << endl;
     // ast -> Traverse();
-    ast -> toIR();
-    fclose(stdout);
+    vector<string> res = ast -> toIR();
+    
+    // for(int i = 0; i < res.size(); ++i){
+    //     cout<<res[i]<<endl;
+    // }
+    //fclose(stdout);
+    koopa_program_t program;
+    koopa_error_code_t ret = koopa_parse_from_string(res, &program);
+    assert(ret == KOOPA_EC_SUCCESS);
     return 0;
 
 }

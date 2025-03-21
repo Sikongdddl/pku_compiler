@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 /*
 We have EBNF in following ways:
@@ -18,12 +19,13 @@ Block     ::= "{" Stmt "}";
 Stmt      ::= "return" Number ";";
 Number    ::= INT_CONST;
 */ 
+using namespace std;
 
 class BaseAST{
 public:
     virtual ~BaseAST() = default;
     virtual void Traverse() const = 0;
-    virtual void toIR() const = 0;
+    virtual vector<string> toIR() const = 0;
 };
 
 class CompUnitAST : public BaseAST{
@@ -34,8 +36,8 @@ public:
         func_def -> Traverse();
         std::cout<<" } ";
     }
-    void toIR() const override{
-        func_def -> toIR();
+    vector<string> toIR() const override{
+        return func_def -> toIR();
     }
 };
 
@@ -52,11 +54,17 @@ public:
         std::cout<<" } ";
     }
 
-    void toIR() const override{
-        std::cout<<"fun @"<<ident<<"(): ";
-        std::cout<<"i32 {"<<std::endl;
-        block -> toIR();
-        std::cout<<"}";
+    vector<string> toIR() const override{
+        vector<string> res;
+        string headline = "fun @" + ident + "(): i32 {";
+        res.push_back(headline);
+        vector<string> block_res = block -> toIR();
+        for(int i = 0; i < block_res.size(); ++i){
+            res.push_back(block_res[i]);
+        }
+        string endline = "}";
+        res.push_back(endline);
+        return res;
     }
 };
 
@@ -69,8 +77,9 @@ public:
         std::cout<<" } ";
     }
 
-    void toIR() const override{
-        return;
+    vector<string> toIR() const override{
+        vector<string> res;
+        return res;
     }
 };
 
@@ -83,9 +92,15 @@ public:
         std::cout<<"}";
     }
 
-    void toIR() const override{
-        std::cout<<"%entry:"<<std::endl;
-        stmt -> toIR();
+    vector<string> toIR() const override{
+        vector<string> res;
+        string headline = "%entry:";
+        res.push_back(headline);
+        vector<string> stmt_res = stmt->toIR();
+        for(int i = 0; i < stmt_res.size(); ++i){
+            res.push_back(stmt_res[i]);
+        }
+        return res;
     }
 };
 
@@ -98,8 +113,11 @@ public:
         std::cout<<" } ";
     }
 
-    void toIR() const override{
-        std::cout<<"  ret "<<number<<std::endl;
+    vector<string> toIR() const override{
+        vector<string> res;
+        string headline = "  ret " + to_string(number);
+        res.push_back(headline);
+        return res;
     }
 };
 
